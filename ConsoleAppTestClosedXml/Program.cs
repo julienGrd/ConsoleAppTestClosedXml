@@ -31,48 +31,6 @@ static void CleanXlFile(string pXlFullPath, string pDestFullPath = null)
 }
 
 
-//internal static void UpdateDefinedNameValues(ref MemoryStream pContentStream, List<KeyValuePair<string, object>> pDefVars, out string pWarnMsg)
-//{
-//    using (var lWb = new XLWorkbook(pContentStream))
-//    {
-//        //-- récup. DefinedNames générales et celles de toutes les feuilles
-//        //  à priori aucune méthode pour chercher 1 DefinedName ds tout le Xls
-//        var lDefRanges = lWb.NamedRanges
-//                        .Union(lWb.Worksheets.SelectMany(lWs => lWs.NamedRanges))
-//                        .Where(lDn => pDefVars.Any(lDv => lDv.Key == lDn.Name)).ToList();
-//        if (lDefRanges == null || lDefRanges.Count < pDefVars.Count)
-//        {
-//            //-- N'a pas trouvé ttes les var. à maj : retourne warning
-//            var lNotFoundDn = (lDefRanges == null)
-//                ? pDefVars.Select(lDv => lDv.Key).ToList()
-//                : pDefVars.Select(lDv => lDv.Key).Except((lDefRanges).Select(lDr => lDr.Name)).ToList();
-//            pWarnMsg = string.Format("{0} variable{1} non trouvée{1} : {2}", lNotFoundDn.Count, lNotFoundDn.Count == 1 ? "" : "s", string.Join(", ", lNotFoundDn));
-//        }
-//        else
-//            pWarnMsg = null;
-
-//        //int lValue = 1;
-//        foreach (var lDefVar in pDefVars.Where(lDv => lDv.Value != null))
-//        {
-//            var lRange = lDefRanges.FirstOrDefault(lDn => lDn.Name == lDefVar.Key);
-//            if (lRange != null)
-//            {
-//                var lCell = lWb.Cell(lRange.RefersTo);
-//                if (lCell != null)
-//                {
-//                    if (lDefVar.Value is int)
-//                        lCell.SetValue((int)lDefVar.Value);
-//                    else if (lDefVar.Value is string)
-//                        lCell.SetValue((string)lDefVar.Value);
-//                    else if (lDefVar.Value is DateTime)
-//                        lCell.SetValue((DateTime)lDefVar.Value);
-//                }
-//            }
-//        }
-//        lWb.SaveAs(pContentStream);
-//    }
-//}
-
 // Supprime la formule de chaque cell de cette page en conservant la valeur de la cell
 // (Excel mémorise pour chaque cell sa formule et sa valeur calculée)
 static void ReplaceAllFormulasWithActualValue(XLWorkbook pWorkBook, string pSheetName)
@@ -80,7 +38,7 @@ static void ReplaceAllFormulasWithActualValue(XLWorkbook pWorkBook, string pShee
     var lSheet = pWorkBook.Worksheets.SingleOrDefault(s => s.Name == pSheetName);
     if (lSheet != null)
     {
-        //lSheet.RecalculateAllFormulas(); => 
+        //lSheet.RecalculateAllFormulas(); => take age
         foreach (var lRow in lSheet.Rows())
         {
             foreach (IXLCell lCell in lRow.Cells())
@@ -97,7 +55,7 @@ static void ReplaceAllFormulasWithActualValue(XLWorkbook pWorkBook, string pShee
                     //lCell.Formula = null;
 
                     //semble suffire, a voir quand y aura des vrais valeurs dans le classeur
-                    //var lValue = lCell.Value;
+                    var lValue = lCell.Value;//take age, and finish with exception ""
                     lCell.SetValue(lCell.CachedValue);
                 }
             }
