@@ -55,7 +55,7 @@ static void ReplaceAllFormulasWithActualValue(XLWorkbook pWorkBook, string pShee
                     //lCell.Formula = null;
 
                     //semble suffire, a voir quand y aura des vrais valeurs dans le classeur
-                    var lValue = lCell.Value;//take age, and finish with exception ""
+                    //var lValue = lCell.Value;//take age, and finish with exception ""
                     lCell.SetValue(lCell.CachedValue);
                 }
             }
